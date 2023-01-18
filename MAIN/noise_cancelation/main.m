@@ -16,10 +16,10 @@ filename = 'data/sample.mp3';
 signal = signal((3000:13000),1);
 N = length(signal);
 % N = 10000;
-% y = sin((1:N)*0.05*pi)';
+% signal = sin((1:N)*0.05*pi)';
 
 %% Noise source
-SNR = -10;
+SNR = -20;
 noise = wgn(1, length(signal),SNR)';
 % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
 noise2 = noise/2 + delayseq(noise,0.01)*2;
@@ -29,10 +29,10 @@ d = signal + noise2;
 x = noise;
 M = 10; % Filter order
 %Filter params are in filter specific files
-[e1, y1, se1] = LMS(d, x, M, signal); 
+[e_trans_LMS, y_trans_LMS, se_trans_LMS] = LMS(d, x, M, signal); 
 %output: error, filter output and square error between e and signal
-[e2, y2, se2] = NLMS(d, x, M, signal);
-[e3, y3, se3] = RLS(d, x, M, signal);
+[e_trans_NLMS, y_trans_NLMS, se_trans_NLMS] = NLMS(d, x, M, signal);
+[e_trans_RLS, y_trans_RLS, se_trans_RLS] = RLS(d, x, M, signal);
 
 %% Plotting
 figure()
@@ -46,53 +46,53 @@ xlabel('sample');
 title('Tin hieu co nhieu x(n)');
 
 subplot(4,4,5)
-plot((1:length(y1)),y1);
+plot((1:length(y_trans_LMS)),y_trans_LMS);
 xlabel('iteration');
 title('LMS y(n)');
 subplot(4,4,6)
-plot((1:length(e1)),e1);
+plot((1:length(e_trans_LMS)),e_trans_LMS);
 xlabel('iteration');
 title('LMS e(n)');
 subplot(4,4,7)
-plot((1:length(e1)),e1-signal);
+plot((1:length(e_trans_LMS)),e_trans_LMS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc LMS');
 subplot(4,4,8)
-plot((1:length(se1)),se1);
+plot((1:length(se_trans_LMS)),se_trans_LMS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS');
 
 subplot(4,4,9)
-plot((1:length(y2)),y2);
+plot((1:length(y_trans_NLMS)),y_trans_NLMS);
 xlabel('iteration');
 title('NLMS y(n)');
 subplot(4,4,10)
-plot((1:length(e2)),e2);
+plot((1:length(e_trans_NLMS)),e_trans_NLMS);
 xlabel('iteration');
 title('NLMS e(n)');
 subplot(4,4,11)
-plot((1:length(e2)),e2-signal);
+plot((1:length(e_trans_NLMS)),e_trans_NLMS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc NLMS');
 subplot(4,4,12)
-plot((1:length(se2)),se2);
+plot((1:length(se_trans_NLMS)),se_trans_NLMS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc NLMS');
 
 subplot(4,4,13)
-plot((1:length(y3)),y3);
+plot((1:length(y_trans_RLS)),y_trans_RLS);
 xlabel('iteration');
 title('RLS y(n)');
 subplot(4,4,14)
-plot((1:length(e3)),e3);
+plot((1:length(e_trans_RLS)),e_trans_RLS);
 xlabel('iteration');
 title('RLS e(n)');
 subplot(4,4,15)
-plot((1:length(e3)),e3-signal);
+plot((1:length(e_trans_RLS)),e_trans_RLS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc RLS');
 subplot(4,4,16)
-plot((1:length(se3)),se3);
+plot((1:length(se_trans_RLS)),se_trans_RLS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc RLS');
 
