@@ -14,7 +14,6 @@ e = zeros(Ns,1); % Sai so giua output cua bo loc va tin hieu mong muon
 % Trong truong hop ung dung noise cancellation, y tien den gia tri cua
 % nhieu can loc, e tien den gia tri cua tin hieu goc
 se = zeros(Ns,1); % Square error value beween error and signal (learning curve)
-% se = [];
 
 for n = 1:Ns
     xx = [xx(2:M);x(n)];
@@ -23,10 +22,6 @@ for n = 1:Ns
     e(n) = d(n) - y(n);
     w1 = w1 + k * e(n);
     se(n) = (signal(n)-e(n))^2;
-%     se(n) = sum(e(max([1 n-M]):n).^2)/length(e(max([1 n-M]):n));
-%     if mod(n,M) == 0
-%         se(end+1)=sum(e(max([1 n-M]):n).^2)/length(e(max([1 n-M]):n));
-%     end
     p = (p - k * xx' * p) ./ lambda;
 end
 se = mag2db(se);

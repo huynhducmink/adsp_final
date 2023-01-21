@@ -2,6 +2,7 @@
 %{ 
 -   MSE calculate as (error-signal)^2, calculate multiple independent run
 -   Each algorithm is used with a traversal FIR filter and a lattice FIR filter
+-   Test convergence speed and error with different filter parameters
 -   Test noise cancelation without noise source (apply delay to the desired
 signal)
 -   Calculate other parameter (MSE, SNR?) read Simulation_and_Performance_Analysis_of_Adaptive_Filter_in_Noise_Cancellation
@@ -11,15 +12,15 @@ signal)
 close all;clear;clc;
 
 %% Signal source
-filename = 'data/sample.mp3';
-[signal,Fsignal] = audioread(filename);
-signal = signal((3000:13000),1);
-N = length(signal);
-% N = 10000;
-% signal = sin((1:N)*0.05*pi)';
+% filename = 'data/sample.mp3';
+% [signal,Fsignal] = audioread(filename);
+% signal = signal((3000:13000),1);
+% N = length(signal);
+N = 2000;
+signal = sin((1:N)*0.05*pi)';
 
 %% Noise source
-SNR = -20;
+SNR = -10;
 noise = wgn(1, length(signal),SNR)';
 % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
 noise2 = noise/2 + delayseq(noise,0.01)*2;
@@ -29,8 +30,9 @@ d = signal + noise2;
 x = noise;
 M = 10; % Filter order
 %Filter params are in filter specific files
-[e_trans_LMS, y_trans_LMS, se_trans_LMS] = LMS(d, x, M, signal); 
-%output: error, filter output and square error between e and signal
+[e_trans_LMS, y_trans_LMS, se_trans_LMS, test] = LMS_latt(d, x, M, signal); 
+%output: error, filter output and square error between e and signal (as e
+%converge to signal)
 [e_trans_NLMS, y_trans_NLMS, se_trans_NLMS] = NLMS(d, x, M, signal);
 [e_trans_RLS, y_trans_RLS, se_trans_RLS] = RLS(d, x, M, signal);
 
