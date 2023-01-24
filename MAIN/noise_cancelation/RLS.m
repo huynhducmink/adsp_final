@@ -1,7 +1,4 @@
-function [e, y, se] = RLS(d, x, M, signal)
-
-delta = 0.01;
-lambda = 0.9999;
+function [e, y, se] = RLS(d, x, M, signal, delta, lambda)
 
 N = length(d);
 I = eye(M);

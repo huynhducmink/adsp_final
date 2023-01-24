@@ -1,8 +1,7 @@
-function [e, y, se] = LMS_latt(d, x, M, signal)
+function [e, y, se] = LMS_latt(d, x, M, signal, mu)
 % Adaptive joint process estimator
 % Trang 255 haykin
 % Trang 380 beh
-mu = 0.01;
 
 N = length(d);
 k = zeros(M,1); % Khoi tao bo loc

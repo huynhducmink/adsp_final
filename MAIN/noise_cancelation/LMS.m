@@ -1,6 +1,4 @@
-function [e, y, se] = LMS(d, x, M, signal)
-
-mu = 0.01;
+function [e, y, se] = LMS(d, x, M, signal, mu)
 
 N = length(d);
 w = zeros(M,1); % Khoi tao bo loc

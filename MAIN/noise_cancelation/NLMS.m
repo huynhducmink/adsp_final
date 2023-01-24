@@ -1,7 +1,4 @@
-function [e, y, se] = NLMS(d, x, M, signal)
-
-mu = 0.01;
-theta = 0.1;
+function [e, y, se] = NLMS(d, x, M, signal, mu, theta)
 
 N = length(d);
 w = zeros(M,1); % Khoi tao bo loc
