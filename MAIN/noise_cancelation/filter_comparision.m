@@ -22,7 +22,7 @@ delta_RLS = 0.01;
 lambda_RLS = 0.9999;
 %LMS lattice filter
 mu_LMS_latt = 0.01;
-%% Filter input and filtering process (do 10 time and take average of se)
+%% Filter input and filtering process (do 100 time and take average of se)
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);
 ase_RLS = zeros(N,1);
