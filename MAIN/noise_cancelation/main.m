@@ -8,9 +8,10 @@ each filter with variable parameter to observe difference in performance)
 -   Calculate other parameter (MSE, SNR?) read Simulation_and_Performance_Analysis_of_Adaptive_Filter_in_Noise_Cancellation
 -   Test with real life data (find sample data from research paper)
 -   Test uncollerated noise in d/x
+-   Implement new NLMS algorithm, fast convergence for same mse
 %}
 close all;clear;clc;
 %% Finding optimal filter paramters for different filter types
 filter_parameters_testing();
 %% Performance comparision between different type of filter
-% filter_comparision();
+filter_comparision();

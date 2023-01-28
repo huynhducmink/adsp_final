@@ -6,14 +6,14 @@ close all;clear;clc;
 % signal = signal((3000:13000),1);
 % N = length(signal);
 
-N = 5000;
+N = 10000;
 signal = sin((1:N)*0.05*pi)';
 %% Paramters
-SNR = -0; % Noise
-M = 20; % Filter order
+noise_power = -0; % Noise
+M = 50; % Filter order
 %% Filter parameter
 %LMS filter
-mu_LMS = 0.01;
+mu_LMS = 0.005;
 %NLMS filter
 mu_NLMS = 0.01;
 theta_NLMS = 0.1;
@@ -26,17 +26,17 @@ mu_LMS_latt = 0.01;
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);
 ase_RLS = zeros(N,1);
-loop_count = 100;
+loop_count = 10;
 f = waitbar(0,'Initializing','Name','Comparing different filter type');
 for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
-    noise = wgn(1, N,SNR)';
+    noise = wgn(1, N,noise_power)';
     % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
-    noise2 = noise/2 + delayseq(noise,0.01)*2;
+    noise2 = noise/2 + delayseq(noise,0.005)*2 + delayseq(noise,0.01)*4;
     % Combine signal and noise to create input for filter
-    d = signal + noise2;
-    x = noise;
+    d = signal + noise2/10;
+    x = noise + signal/20;
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
     %output: error, filter output and square error between e and signal (as e

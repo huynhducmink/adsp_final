@@ -6,10 +6,10 @@ close all;clear;clc;
 % signal = signal((3000:13000),1);
 % N = length(signal);
 
-N = 5000;
+N = 10000;
 signal = sin((1:N)*0.05*pi)';
 %% Paramters
-SNR = -10; % Noise
+noise_power = -10; % Noise
 M = 100; % Filter order
 %% Test LMS filter
 mu_LMS = [0.01 0.05 0.1];
@@ -21,7 +21,7 @@ for param = 1:length(mu_LMS)
     loop_count = 100;
     for loop = 1:loop_count
         % Artificial noise generation
-        noise = wgn(1, N,SNR)';
+        noise = wgn(1, N,noise_power)';
         % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
         noise2 = noise/2 + delayseq(noise,0.01)*2;
         % Combine signal and noise to create input for filter
@@ -44,7 +44,7 @@ for param = 1:length(mu_NLMS)
     loop_count = 100;
     for loop = 1:loop_count
         % Artificial noise generation
-        noise = wgn(1, N,SNR)';
+        noise = wgn(1, N,noise_power)';
         % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
         noise2 = noise/2 + delayseq(noise,0.01)*2;
         % Combine signal and noise to create input for filter
