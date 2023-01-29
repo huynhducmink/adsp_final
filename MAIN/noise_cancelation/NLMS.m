@@ -14,8 +14,7 @@ for n = 1:N
     xx = [xx(2:M);x(n)];
     y(n) = w' * xx;
     e(n) = d(n) - y(n);
-    se(n) = (signal(n)-e(n))^2;
+    se(n) = (signal(n)-e(n)).^2;
     w = w + mu/(theta + xx'*xx) * e(n) * xx;
 end
-se = mag2db(se);
 end

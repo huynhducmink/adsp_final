@@ -31,7 +31,7 @@ for n = 1:N
     %Linear combiner (LMS)
     y(n) = w' * g;
     e(n) = d(n) - y(n);
-    se(n) = (signal(n)-e(n))^2;
+    se(n) = (signal(n)-e(n)).^2;
     e_stage(1) = d(n) - g(1) * w(1);
     for stage = 2:M
         e_stage(stage) = e_stage(stage-1) - g(stage) * w(stage);
@@ -40,5 +40,4 @@ for n = 1:N
     g_delay = g;
     w = w + mu * e_stage(M) * g;
 end
-se = mag2db(se);
 end

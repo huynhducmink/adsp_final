@@ -18,8 +18,7 @@ for n = 1:N
     y(n) = xx'*w;
     e(n) = d(n) - y(n);
     w = w + k * e(n);
-    se(n) = (signal(n)-e(n))^2;
+    se(n) = (signal(n)-e(n)).^2;
     p = (p - k * xx' * p) ./ lambda;
 end
-se = mag2db(se);
 end

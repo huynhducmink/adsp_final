@@ -3,12 +3,13 @@
 Evaluation parameters:
 - Differece between output signal (e) and pure signal
 - Learning curve (convergence speed)
-- SNR of desired signal vs output signal
+- MSE of desired signal vs output signal
 Parts:
-- Default LMS filter structure (demo signal, demo noise, filter order, signal length,
-convergence speed, learning curve demo)
+- Default LMS filter structure (demo signal, demo noise, filter order,
+convergence speed, learning curve demo, evaluation parameter demo)
+(starter.m)
 - Demo algorithm for different types of adaptive filter structure (LMS,
-NLMS, RLS, LMS lattice)
+NLMS, RLS, LMS lattice) (with real life data)
 - Testing parameters of each adaptive filter type for optimal error
 reduction and convergence speed
 - Testing different noise characteristic:
@@ -18,6 +19,8 @@ reduction and convergence speed
     - Reference signal (pure noise) get part of signal mixed in
     - Uncorrelated noise in desired signal
     - Total uncorrelated noise
+- Noise cancelation without reference signal (with periodic eg. sine wave
+noise)
 %}
 %{ 
 WIP
@@ -32,7 +35,3 @@ each filter with variable parameter to observe difference in performance)
 -   Implement new NLMS algorithm, fast convergence for same mse
 %}
 close all;clear;clc;
-%% Finding optimal filter paramters for different filter types
-filter_parameters_testing();
-%% Performance comparision between different type of filter
-filter_comparision();
