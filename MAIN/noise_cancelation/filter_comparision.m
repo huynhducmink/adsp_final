@@ -2,18 +2,19 @@
 close all;clear;clc;
 %% Signal source
 % filename = 'data/sample.mp3';
-% [signal,Fsignal] = audioread(filename);
+filename = 'data/f2bjrop1.0.wav';
+[signal,Fsignal] = audioread(filename);
 % signal = signal((3000:13000),1);
-% N = length(signal);
+N = length(signal);
 
-N = 10000;
-signal = sin((1:N)*0.05*pi)';
+% N = 10000;
+% signal = sin((1:N)*0.05*pi)';
 %% Paramters
 noise_power = -0; % Noise
-M = 50; % Filter order
+M = 100; % Filter order
 %% Filter parameter
 %LMS filter
-mu_LMS = 0.005;
+mu_LMS = 0.001;
 %NLMS filter
 mu_NLMS = 0.01;
 theta_NLMS = 0.1;
@@ -26,17 +27,19 @@ mu_LMS_latt = 0.01;
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);
 ase_RLS = zeros(N,1);
-loop_count = 10;
+loop_count = 100;
 f = waitbar(0,'Initializing','Name','Comparing different filter type');
 for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(1, N,noise_power)';
     % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
-    noise2 = noise/2 + delayseq(noise,0.005)*2 + delayseq(noise,0.01)*4;
+    noise2 = noise/2 + delayseq(noise,60)*2 + delayseq(noise,80)*4;
     % Combine signal and noise to create input for filter
-    d = signal + noise2/10;
-    x = noise + signal/20;
+%     d = signal + noise2/10;
+%     x = noise + signal/20;
+    d = signal + sin(2*pi*1000/Fsignal*(1:N))';
+    x = delayseq(d,30);
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
     %output: error, filter output and square error between e and signal (as e
@@ -57,11 +60,15 @@ figure()
 subplot(4,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
-title('Tin hieu goc d(n)');
+title('Tin hieu goc');
 subplot(4,4,2)
 plot((1:length(d)),d);
 xlabel('sample');
-title('Tin hieu co nhieu x(n)');
+title('Tin hieu desired d(n)');
+subplot(4,4,3)
+plot((1:length(x)),x);
+xlabel('sample');
+title('Tin hieu reference x(n)');
 
 subplot(4,4,5)
 plot((1:length(y_LMS)),y_LMS);
