@@ -11,14 +11,14 @@ signal = sin((1:N)*0.05*pi)';
 %% Paramters
 noise_power = 0; % Noise
 M = 10; % Filter order
+loop_count = 50;
 %% Test LMS filter
 mu_LMS = [0.01 0.05 0.1];
-%% Filter input and filtering process (do 100 time and take average of se)
+%% Filter input and filtering process (do 50 time and take average of se)
 ase_LMS = zeros(N,1,length(mu_LMS));
 e_LMS = zeros(N,1,length(mu_LMS));
 y_LMS = zeros(N,1,length(mu_LMS));
 for param = 1:length(mu_LMS)
-    loop_count = 100;
     for loop = 1:loop_count
         % Artificial noise generation
         noise = wgn(1, N,noise_power)';
@@ -42,7 +42,6 @@ ase_NLMS = zeros(N,1,length(mu_NLMS));
 e_NLMS = zeros(N,1,length(mu_NLMS));
 y_NLMS = zeros(N,1,length(mu_NLMS));
 for param = 1:length(mu_NLMS)
-    loop_count = 100;
     for loop = 1:loop_count
         % Artificial noise generation
         noise = wgn(1, N,noise_power)';
@@ -59,14 +58,13 @@ for param = 1:length(mu_NLMS)
     ase_NLMS(:,:,param) = mag2db(ase_NLMS(:,:,param));
 end
 %% Test RLS filter
-delta_RLS = [0.01 0.05 0.1];
+delta_RLS = [0.001 0.01 0.05 0.1];
 lambda_RLS = 0.9999;
 %% Filter input and filtering process (do 100 time and take average of se)
 ase_RLS = zeros(N,1,length(delta_RLS));
 e_RLS = zeros(N,1,length(delta_RLS));
 y_RLS = zeros(N,1,length(delta_RLS));
 for param = 1:length(delta_RLS)
-    loop_count = 100;
     for loop = 1:loop_count
         % Artificial noise generation
         noise = wgn(1, N,noise_power)';
@@ -82,7 +80,28 @@ for param = 1:length(delta_RLS)
     ase_RLS(:,:,param) = ase_RLS(:,:,param)/loop_count;
     ase_RLS(:,:,param) = mag2db(ase_RLS(:,:,param));
 end
-
+%% Test LMS lattice filter
+mu_LMS_latt = [0.001 0.005 0.01];
+%% Filter input and filtering process (do 100 time and take average of se)
+ase_LMS_latt = zeros(N,1,length(mu_LMS_latt));
+e_LMS_latt = zeros(N,1,length(mu_LMS_latt));
+y_LMS_latt = zeros(N,1,length(mu_LMS_latt));
+for param = 1:length(mu_LMS_latt)
+    for loop = 1:loop_count
+        % Artificial noise generation
+        noise = wgn(1, N,noise_power)';
+        % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
+        noise2 = noise/2 + delayseq(noise,5)*2;
+        % Combine signal and noise to create input for filter
+        d = signal + noise2;
+        x = noise;
+        %Filter params are in filter specific files
+        [e_LMS_latt(:,:,param), y_LMS_latt(:,:,param), se_LMS_latt] = LMS_latt(d, x, M, signal, mu_LMS_latt(param)); 
+        ase_LMS_latt(:,:,param) = ase_LMS_latt(:,:,param) + se_LMS_latt;
+    end
+    ase_LMS_latt(:,:,param) = ase_LMS_latt(:,:,param)/loop_count;
+    ase_LMS_latt(:,:,param) = mag2db(ase_LMS_latt(:,:,param));
+end
 %% Plotting
 figure()
 subplot(5,4,1)
@@ -228,4 +247,52 @@ legendStrings = "delta RLS = " + string(delta_RLS);
 legend(legendStrings)
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc RLS');
+
+% LMS lattice
+subplot(5,4,17)
+hold on
+for i = 1:length(mu_LMS_latt)
+    plot((1:length(y_LMS_latt(:,:,1))),y_LMS_latt(:,:,i));
+end
+hold off
+legendStrings = "mu LMS lattice = " + string(mu_LMS_latt);
+legend(legendStrings)
+xlabel('iteration');
+title('LMS_lattice y(n)');
+
+subplot(5,4,18)
+hold on
+for i = 1:length(mu_LMS_latt)
+    plot((1:length(e_LMS_latt(:,:,1))),e_LMS_latt(:,:,i));
+end
+hold off
+legendStrings = "mu LMS lattice = " + string(mu_LMS_latt);
+legend(legendStrings)
+xlabel('iteration');
+title('LMS_lattice e(n)');
+
+subplot(5,4,19)
+hold on
+for i = 1:length(mu_LMS_latt)
+    plot((1:length(e_LMS_latt(:,:,1))),e_LMS_latt(:,:,i)-signal);
+end
+hold off
+legendStrings = "mu LMS lattice = " + string(mu_LMS_latt);
+legend(legendStrings)
+xlabel('iteration');
+title('Sai so giua tin hieu goc va tin hieu qua bo loc LMS lattice');
+
+subplot(5,4,20)
+hold on
+for i = 1:length(mu_LMS_latt)
+    plot((1:length(ase_LMS_latt(:,:,1))),ase_LMS_latt(:,:,i));
+end
+hold off
+legendStrings = "mu LMS lattice = " + string(mu_LMS_latt);
+legend(legendStrings)
+xlabel('iteration');
+title('SE (Learning curve) cua bo loc LMS lattice');
+
+sgtitle('Testing optimal parameters for different types of filter')
+
 savefig('figure/filter_parameters.fig');

@@ -17,7 +17,6 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    % noise2 = noise/2 + delayseq(noise,0.5/Fs)*2;
     noise2 = delayseq(noise,0);
     % Combine signal and noise to create input for filter
     d = signal + noise;
@@ -62,6 +61,8 @@ subplot(2,4,8)
 plot((1:length(ase_LMS)),ase_LMS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS (trung binh 100 lan)');
+
+sgtitle('Starter demo');
 
 savefig('figure/starter.fig');
 mse1 = mag2db(calMSE(d,signal));

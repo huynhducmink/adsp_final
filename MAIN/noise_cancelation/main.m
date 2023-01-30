@@ -8,11 +8,13 @@ Parts:
 - Default LMS filter structure (demo signal, demo noise, filter order,
 convergence speed, learning curve demo, evaluation parameter demo)
 (starter.m)
-- Demo algorithm for different types of adaptive filter structure (LMS,
-NLMS, RLS, LMS lattice) (with real life data)
+- Effect of filter order on MSE
 - Testing parameters of each adaptive filter type for optimal error
-reduction and convergence speed
-- Testing different noise characteristic:
+reduction and convergence speed (with sinusoidal
+signal)(filter_parameter_testing.m)(fix to split figure for easier view)
+- Demo algorithm for different types of adaptive filter structure (LMS,
+NLMS, RLS, LMS lattice) (with real life data) (filter_comparision.m)
+- Testing different noise characteristic: (noise_testing.m)
     - Normal gaussian noise, clean signal
     - Delay gaussian noise, delay sample lower or higher than filter order
     - Noise from multiple source
