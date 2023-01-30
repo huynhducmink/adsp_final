@@ -1,0 +1,4 @@
+noise_cancelation/Paper/*
+noise_cancelation/figure/*
+!noise_cancelation/Paper/ANC.pdf
+!noise_cancelation/Paper/FULLTEXT01.pdf
