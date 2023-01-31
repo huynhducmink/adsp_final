@@ -5,12 +5,9 @@ filename = 'data/f2bjrop1.0.wav';
 [signal,Fsignal] = audioread(filename);
 % signal = signal((3000:13000),1);
 N = length(signal);
-
-% N = 10000;
-% signal = sin((1:N)*0.05*pi)';
 %% Paramters
-M = 30; % Filter order
-loop_count = 10;
+M = 200; % Filter order
+loop_count = 1;
 %% Filter parameter
 %LMS filter
 mu_LMS = 0.01;
@@ -21,7 +18,7 @@ theta_NLMS = 0.01;
 delta_RLS = 0.1;
 lambda_RLS = 0.9999;
 %LMS lattice filter
-mu_LMS_latt = 0.001;
+mu_LMS_latt = 0.01;
 %% Filter input and filtering process (do 50 time and take average of se)
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);
@@ -31,8 +28,8 @@ f = waitbar(0,'Initializing','Name','No reference noise cancelation');
 for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
-    d = signal + sin(2*pi*1000/Fsignal*(1:N))';
-    x = delayseq(d,2);
+    d = signal + sin(1/50*(1:N))';
+    x = delayseq(d,300);
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
     %output: error, filter output and square error between e and signal (as e
@@ -53,6 +50,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -134,7 +132,9 @@ plot((1:length(se_LMS_latt)),se_LMS_latt);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
-savefig('figure/no_ref2.fig');
+sgtitle('Adaptive noise cancelation without reference signal');
+saveas(gcf,'figure/no_ref.png');
+savefig('figure/no_ref.fig');
 
 mse1 = mag2db(calMSE(d,signal));
 fprintf('Starter script');

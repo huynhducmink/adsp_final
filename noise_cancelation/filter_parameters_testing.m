@@ -104,6 +104,7 @@ for param = 1:length(mu_LMS_latt)
 end
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -294,5 +295,5 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Testing optimal parameters for different types of filter')
-
+saveas(gcf,'figure/filter_parameters.png');
 savefig('figure/filter_parameters.fig');

@@ -32,6 +32,7 @@ ase_LMS = ase_LMS/loop_count;
 ase_LMS = mag2db(ase_LMS);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(2,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -63,8 +64,9 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS (trung binh 100 lan)');
 
 sgtitle('Starter demo');
-
+saveas(gcf,'figure/starter.png');
 savefig('figure/starter.fig');
+
 mse1 = mag2db(calMSE(d,signal));
 fprintf('Starter script');
 fprintf('\nMSE value of signal with noise: %f',mse1);

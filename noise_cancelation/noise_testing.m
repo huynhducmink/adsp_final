@@ -65,6 +65,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -147,7 +148,7 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Normal gaussian noise, clean signal')
-
+saveas(gcf,'figure/noise_test_1.png');
 savefig('figure/noise_test_1.fig');
 %% ========================================================================================
 %% 2 Delay gaussian noise, delay sample lower or higher than filter order
@@ -185,6 +186,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -267,7 +269,7 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Delay gaussian noise, delay sample lower or higher than filter order')
-
+saveas(gcf,'figure/noise_test_2.png');
 savefig('figure/noise_test_2.fig');
 %% ========================================================================================
 %% 3 Reference signal (pure noise) get part of signal mixed in
@@ -305,6 +307,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -387,7 +390,7 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Reference signal (pure noise) get part of signal mixed in')
-
+saveas(gcf,'figure/noise_test_3.png');
 savefig('figure/noise_test_3.fig');
 %% ========================================================================================
 %% 4 Uncorrelated noise in desired signal
@@ -425,6 +428,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -507,7 +511,7 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Uncorrelated noise in desired signal')
-
+saveas(gcf,'figure/noise_test_4.png');
 savefig('figure/noise_test_4.fig');
 %% ========================================================================================
 %% 5 Total uncorrelated noise
@@ -545,6 +549,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -627,5 +632,5 @@ xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
 sgtitle('Total uncorrelated noise')
-
+saveas(gcf,'figure/noise_test_5.png');
 savefig('figure/noise_test_5.fig');

@@ -11,10 +11,10 @@ N = length(signal);
 %% Paramters
 noise_power = 0; % Noise
 M = 50; % Filter order
-loop_count = 50;
+loop_count = 20;
 %% Filter parameter
 %LMS filter
-mu_LMS = 0.01;
+mu_LMS = 0.005;
 %NLMS filter
 mu_NLMS = 0.05;
 theta_NLMS = 0.01;
@@ -57,6 +57,7 @@ se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
 %% Plotting
 figure()
+set(gcf,'WindowState','maximized');
 subplot(5,4,1)
 plot((1:length(signal)),signal);
 xlabel('sample');
@@ -138,4 +139,6 @@ plot((1:length(se_LMS_latt)),se_LMS_latt);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS lattice');
 
+sgtitle('Performance comparision between different filter types');
+saveas(gcf,'figure/filter_comparision.png');
 savefig('figure/filter_comparision.fig');
