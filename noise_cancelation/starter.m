@@ -13,6 +13,7 @@ mu_LMS = 0.003;
 ase_LMS = zeros(N,1);
 loop_count = 100;
 f = waitbar(0,'Initializing','Name','Starter demo');
+tic
 for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
@@ -27,6 +28,7 @@ for loop = 1:loop_count
     %converge to signal)
     ase_LMS = ase_LMS + se_LMS;
 end
+toc
 close(f)
 ase_LMS = ase_LMS/loop_count;
 ase_LMS = mag2db(ase_LMS);
@@ -67,11 +69,11 @@ sgtitle('Starter demo');
 saveas(gcf,'figure/starter.png');
 savefig('figure/starter.fig');
 
-mse1 = mag2db(calMSE(d,signal));
+mse1 = mag2db(calMSE(d,signal)); %mse(db) = 20*10^mse(times)
 fprintf('Starter script');
 fprintf('\nMSE value of signal with noise: %f',mse1);
 mse2 = mag2db(calMSE(e_LMS,signal));
 fprintf('\nMSE value of adaptive filter output: %f',mse2);
-mse3 = mag2db(calMSE(e_LMS(1500:end),signal(1500:end)));
-fprintf('\nMSE value of AF output after converge (1500 sample): %f',mse3);
+mse3 = mag2db(calMSE(e_LMS(1000:end),signal(1000:end)));
+fprintf('\nMSE value of AF output after converge (1000 sample): %f',mse3);
 fprintf('\n========================================\n');

@@ -18,7 +18,7 @@ theta_NLMS = 0.01;
 delta_RLS = 0.1;
 lambda_RLS = 0.9999;
 %LMS lattice filter
-mu_LMS_latt = 0.01;
+mu_LMS_latt = 0.005;
 %% Filter input and filtering process (do 50 time and take average of se)
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);

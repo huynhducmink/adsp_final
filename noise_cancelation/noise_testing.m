@@ -20,7 +20,7 @@ noise_power = 0; % Noise
 loop_count = 50;
 %% Filter parameter
 %LMS filter
-mu_LMS = 0.01;
+mu_LMS = 0.005;
 %NLMS filter
 mu_NLMS = 0.05;
 theta_NLMS = 0.01;
@@ -41,9 +41,8 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    noise2 = delayseq(noise/2,10);
     % Combine signal and noise to create input for filter
-    d = signal + noise2;
+    d = signal + noise;
     x = noise;
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
@@ -63,6 +62,7 @@ se_LMS = mag2db(ase_LMS/loop_count);
 se_NLMS = mag2db(ase_NLMS/loop_count);
 se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
+mag2db(calMSE(d,signal))
 %% Plotting
 figure()
 set(gcf,'WindowState','maximized');
@@ -162,7 +162,7 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    noise2 = delayseq(noise,10)/2 + delayseq(noise,32);
+    noise2 = noise + delayseq(noise,30)/4;
     % Combine signal and noise to create input for filter
     d = signal + noise2;
     x = noise;
@@ -184,6 +184,7 @@ se_LMS = mag2db(ase_LMS/loop_count);
 se_NLMS = mag2db(ase_NLMS/loop_count);
 se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
+mag2db(calMSE(d,signal))
 %% Plotting
 figure()
 set(gcf,'WindowState','maximized');
@@ -283,10 +284,9 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    noise2 = noise/2 + delayseq(noise,10)*2;
     % Combine signal and noise to create input for filter
-    d = signal + noise2;
-    x = noise + signal/10;
+    d = signal + noise;
+    x = noise + signal/5;
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
     %output: error, filter output and square error between e and signal (as e
@@ -305,6 +305,7 @@ se_LMS = mag2db(ase_LMS/loop_count);
 se_NLMS = mag2db(ase_NLMS/loop_count);
 se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
+mag2db(calMSE(d,signal))
 %% Plotting
 figure()
 set(gcf,'WindowState','maximized');
@@ -404,9 +405,9 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    noise2 = noise/2 + delayseq(noise,10)*2;
+    noise_unco = wgn(N,1,-5);
     % Combine signal and noise to create input for filter
-    d = signal + noise2 + wgn(N,1,-5);
+    d = signal + noise + noise_unco;
     x = noise;
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
@@ -426,6 +427,7 @@ se_LMS = mag2db(ase_LMS/loop_count);
 se_NLMS = mag2db(ase_NLMS/loop_count);
 se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
+mag2db(calMSE(d,signal))
 %% Plotting
 figure()
 set(gcf,'WindowState','maximized');
@@ -443,68 +445,68 @@ xlabel('sample');
 title('Tin hieu reference x(n)');
 
 subplot(5,4,5)
-plot((1:length(y_LMS)),y_LMS);
-xlabel('iteration');
-title('LMS y(n)');
-subplot(5,4,6)
 plot((1:length(e_LMS)),e_LMS);
 xlabel('iteration');
 title('LMS e(n)');
-subplot(5,4,7)
+subplot(5,4,6)
 plot((1:length(e_LMS)),e_LMS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc LMS');
+subplot(5,4,7)
+plot((1:length(e_LMS)),e_LMS-signal-noise_unco);
+xlabel('iteration');
+title('Sai so giua tin hieu goc + nhieu uncorrelated va tin hieu qua bo loc LMS');
 subplot(5,4,8)
 plot((1:length(se_LMS)),se_LMS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc LMS');
 
 subplot(5,4,9)
-plot((1:length(y_NLMS)),y_NLMS);
-xlabel('iteration');
-title('NLMS y(n)');
-subplot(5,4,10)
 plot((1:length(e_NLMS)),e_NLMS);
 xlabel('iteration');
 title('NLMS e(n)');
-subplot(5,4,11)
+subplot(5,4,10)
 plot((1:length(e_NLMS)),e_NLMS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc NLMS');
+subplot(5,4,11)
+plot((1:length(e_NLMS)),e_NLMS-signal-noise_unco);
+xlabel('iteration');
+title('Sai so giua tin hieu goc + nhieu uncorrelated va tin hieu qua bo loc NLMS');
 subplot(5,4,12)
 plot((1:length(se_NLMS)),se_NLMS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc NLMS');
 
 subplot(5,4,13)
-plot((1:length(y_RLS)),y_RLS);
-xlabel('iteration');
-title('RLS y(n)');
-subplot(5,4,14)
 plot((1:length(e_RLS)),e_RLS);
 xlabel('iteration');
 title('RLS e(n)');
-subplot(5,4,15)
+subplot(5,4,14)
 plot((1:length(e_RLS)),e_RLS-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc RLS');
+subplot(5,4,15)
+plot((1:length(e_RLS)),e_RLS-signal-noise_unco);
+xlabel('iteration');
+title('Sai so giua tin hieu goc + nhieu uncorrelated va tin hieu qua bo loc RLS');
 subplot(5,4,16)
 plot((1:length(se_RLS)),se_RLS);
 xlabel('iteration');
 title('SE (Learning curve) cua bo loc RLS');
 
 subplot(5,4,17)
-plot((1:length(y_LMS_latt)),y_LMS_latt);
-xlabel('iteration');
-title('LMS lattice y(n)');
-subplot(5,4,18)
 plot((1:length(e_LMS_latt)),e_LMS_latt);
 xlabel('iteration');
 title('LMS lattice e(n)');
-subplot(5,4,19)
+subplot(5,4,18)
 plot((1:length(e_LMS_latt)),e_LMS_latt-signal);
 xlabel('iteration');
 title('Sai so giua tin hieu goc va tin hieu qua bo loc LMS lattice');
+subplot(5,4,19)
+plot((1:length(e_LMS_latt)),e_LMS_latt-signal-noise_unco);
+xlabel('iteration');
+title('Sai so giua tin hieu goc + nhieu uncorrelated va tin hieu qua bo loc LMS lattice');
 subplot(5,4,20)
 plot((1:length(se_LMS_latt)),se_LMS_latt);
 xlabel('iteration');
@@ -525,9 +527,8 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     noise = wgn(N, 1,noise_power);
-    noise2 = noise/2 + delayseq(noise,10)*2 + delayseq(noise,25)*4;
     % Combine signal and noise to create input for filter
-    d = signal + noise2;
+    d = signal + noise;
     x = wgn(N,1,0);
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
@@ -547,6 +548,7 @@ se_LMS = mag2db(ase_LMS/loop_count);
 se_NLMS = mag2db(ase_NLMS/loop_count);
 se_RLS = mag2db(ase_RLS/loop_count);
 se_LMS_latt = mag2db(ase_LMS_latt/loop_count);
+mag2db(calMSE(d,signal))
 %% Plotting
 figure()
 set(gcf,'WindowState','maximized');
