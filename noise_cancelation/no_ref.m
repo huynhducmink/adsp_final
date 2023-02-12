@@ -6,7 +6,7 @@ filename = 'data/f2bjrop1.0.wav';
 % signal = signal((3000:13000),1);
 N = length(signal);
 %% Paramters
-M = 200; % Filter order
+M = 50; % Filter order
 loop_count = 1;
 %% Filter parameter
 %LMS filter
@@ -19,7 +19,7 @@ delta_RLS = 0.1;
 lambda_RLS = 0.9999;
 %LMS lattice filter
 mu_LMS_latt = 0.005;
-%% Filter input and filtering process (do 50 time and take average of se)
+%% Filter input and filtering process
 ase_LMS = zeros(N,1);
 ase_NLMS = zeros(N,1);
 ase_RLS = zeros(N,1);
@@ -29,7 +29,7 @@ for loop = 1:loop_count
     waitbar(loop/loop_count,f,[num2str(loop),'/',num2str(loop_count)])
     % Artificial noise generation
     d = signal + sin(1/50*(1:N))';
-    x = delayseq(d,300);
+    x = delayseq(d,200);
     %Filter params are in filter specific files
     [e_LMS, y_LMS, se_LMS] = LMS(d, x, M, signal, mu_LMS); 
     %output: error, filter output and square error between e and signal (as e
